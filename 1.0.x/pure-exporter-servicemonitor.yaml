@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: prometheus-kubeaddons
+  name: pure-storage
+  namespace: kubeaddons
+spec:
+  endpoints:
+  - interval: 30s
+    targetPort: 9491
+    path: /metrics/flashblade/array
+    params: 
+      endpoint: 
+        -  10.226.224.180
+      apitoken: 
+        -  T-62824b9d-edd7-41ca-b218-c754aba6356c
+  - interval: 30s
+    targetPort: 9491
+    path: /metrics/flashblade/client
+    scrapeTimeout: 25s
+    params:
+      endpoint:
+        -  10.226.224.180
+      apitoken:
+        -  T-62824b9d-edd7-41ca-b218-c754aba6356c 
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      run: pure-prometheus

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pure-exporter
+  labels:
+    run: pure-prometheus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9591
+    targetPort: 9491
+    protocol: TCP
+  selector:
+    run: pure-prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pure-exporter
+spec:
+  selector:
+    matchLabels:
+      run: pure-prometheus
+  strategy:
+        type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: pure-prometheus
+    spec:
+      containers:
+        - name: pure-exporter
+          image: genegatpure/pure-exporter:latest
+          ports:
+          - containerPort: 9491
+            hostPort: 9491
+            protocol: TCP
